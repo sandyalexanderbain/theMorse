@@ -1,13 +1,16 @@
 // To simulate dot and dash in C.
 
+#include <ctype.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+// #include <stdlib.h>
+// #include <time.h>
 #include <stdbool.h>
 
 #define DEBUG false
+// Indented MACRO for checking value of a certain variable.
 #define check(X) if (DEBUG) printf(#X " = %d \n", X);
 
+// MACROS to use in function "translate"
 #define five(Y, A, B, C, D, E) Y[0] = A; Y[1] = B, Y[2] = C; Y[3] = D; Y[4] = E;
 #define four(Y, A, B, C, D) Y[0] = A; Y[1] = B, Y[2] = C; Y[3] = D;
 #define three(Y, A, B, C) Y[0] = A; Y[1] = B, Y[2] = C;
@@ -20,32 +23,60 @@ void translate(char morsePrint[], int temporary);
 
 int main(void)
 {
-   char userInput, morsePrint[5] = {false};
-   int temporary = 100; // artificialPointer variable
+   char toggleSplit, toggleSpace, 
+        userInput, 
+        morsePrint[5] = {false};
+   int temporary = 100; // Use integer 100 as a base point and invalid input will break the loop.
 
-   printf("Enter a letter to convert to morse code: ");
-   scanf(" %c", &userInput);
-   printf("\n     ");
+   printf("\nHelloThere. Split Words On Spaces? --> \nSplit\nWords\nOn\nSpaces?");
+   printf("       Type \"S\" to toggle ON. Typing any other character keeps toggle OFF. \n\n    : ");
+   scanf(" %c", &toggleSplit);
+   toggleSplit = toupper(toggleSplit);
+   printf("\n\t\tToggle Split is "); 
 
-   check(temporary);
-   temporary = locate(userInput);
-   check(temporary);
-
-   // Prevent Changing the first character to • when not valid userInput.
-   if (userInput != 'e' && temporary == 0) temporary = 100;
-
-   translate(morsePrint, temporary);
-   check(temporary);
-
-   for (int lC = 0; lC < 5; lC++) { // loopCount variable
-      if (temporary == 100) {
-         printf("%c\n\t is an invalid userInput!!! \n", userInput);
-         break;
-      }
-      if (morsePrint[lC] == 1) dot();
-      else if (morsePrint[lC] == 2) dash();
+   if (toggleSplit == 'S') {
+      printf("ON."); 
+      printf("\n\nType \"D\" to toggle ON double-line spacing. Typing other characters keeps OFF.");
+      printf("\n\n   : ");
+      scanf(" %c", &toggleSpace); 
+      toggleSpace = toupper(toggleSpace);
+      printf("\n\n\t\tToggle Space is "); 
+      if (toggleSpace == 'D') printf("ON. \n\n"); else printf("OFF.\n\n");
    }
+   else printf("OFF.\n\n\n");
 
+   printf("Please type multiple letters/numbers or words to translate into morse code. \n");
+   printf("Type \"?\" and press ENTER/RETURN to exit the program.\n\n   : ");
+
+   while (userInput != '?') {
+      userInput = tolower(getchar());
+      // Add small gaps between morse code characters.
+      printf("     ");
+
+      // Detect spaces between letters/numbers/words and break into a new-line
+      if (toggleSplit == 'S') if (userInput == ' ') printf("\n");
+      if (toggleSpace == 'D') if (userInput == ' ') printf("\n");
+
+      check(temporary);
+      temporary = locate(userInput);
+      check(temporary);
+
+      // Prevent Changing the first character to • when not valid userInput.
+      if (userInput != 'e' && temporary == 0) {
+         temporary = 100;
+      }
+
+      translate(morsePrint, temporary);
+      check(temporary);
+
+      for (int lC = 0; lC < 5; lC++) { // loopCount variable
+         if (temporary == 100) break;
+         if (morsePrint[lC] == 1) dot();
+         else if (morsePrint[lC] == 2) dash();
+      }
+      // Clean the array "morsePrint" after each char printed.
+      five(morsePrint, 0, 0, 0, 0, 0);
+   }
    printf("\n");
 
    if (DEBUG) {
