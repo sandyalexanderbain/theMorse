@@ -5,7 +5,11 @@
 #include <time.h>
 #include <stdbool.h>
 
-#define DEBUG true
+#define DEBUG false
+#define check(X) printf(#X " = %d \n", X);
+#define five(Y, A, B, C, D, E) Y[0] = A; Y[1] = B, Y[2] = C; Y[3] = D; Y[4] = E;
+#define four(Y, A, B, C, D) Y[0] = A; Y[1] = B, Y[2] = C; Y[3] = D;
+#define three(Y, A, B, C) Y[0] = A; Y[1] = B, Y[2] = C;
 
 void dot(void);
 void dash(void);
@@ -13,40 +17,69 @@ int locate(char input);
 
 int main(void)
 {
-   char input, array[5] = {false};
-   int aP = 0; // artificialPointer variable
-   int database[5][40] = {[0][0] = 1, // DOT
-                          [0][1] = 2,
-                          [1][2] = 1, [1][3] = 2, // DOT
-                          [1][4] = 1, [1][5] = 2,
-                          [2][6] = 1, [2][7] = 2, [2][8] = 1, [2][9] = 2, // DOT
-                          [2][10] = 1, [2][11] = 2, [2][12] = 1, [2][13] = 2,
-      [0][2] = 1, [0][3] = 1, [0][6] = 1, [0][7] = 1}; //[0][8] = 1, [0][9] = 1,
-
-// 0, 2, 3, 6, 7, 8, 9//, 14, 15, 16, 18, 20, 21, 30, 31, 33, 37, 40, 45  NOTE: set to 1
-// 3, 6//, 14, 15, 30, 31, 33  NOTE: set to 1
-// 7//, 16, NOTE: set to 2
+   char input, morsePrint[5] = {false};
+   int aP = 100; // artificialPointer variable
 
    printf("Enter a letter to convert to morse code: ");
    scanf(" %c", &input);
    printf("\n     ");
 
+   if (DEBUG) check(aP);
    aP = locate(input);
+   if (DEBUG) check(aP);
+
+   // Prevent Changing the first character to • when not valid input.
+   if (input != 'e' && aP == 0) aP = 100;
+
+   switch (aP) {
+      case 0: case 2: case 3: case 6: case 7: case 8: case 9: case 14: case 15: case 16: case 18:
+      case 20: case 21: case 30: case 31: case 33: case 37: case 40: case 45: {
+         morsePrint[0] = 1; 
+         break;
+      }
+   }
+
+   switch (aP) {
+      case 2: case 6: case 7: case 14: case 15: case 16: case 30: case 31: case 33: case 37:
+         morsePrint[1] = 1; break;
+   }
+
+   switch (aP) {
+      case 6: case 14: case 15: case 30: case 31: case 33:
+         morsePrint[2] = 1; break;
+   }
+
+   switch (aP) {
+      case 7: case 16: case 37:
+         morsePrint[2] = 2; break;
+   }
+
+   switch (aP) {
+      case 14: case 16: case 30: case 31: morsePrint[3] = 1; break;
+      case 15: case 33: case 37: morsePrint[3] = 2; break;
+   }
+
+   switch (aP) {
+      case 30: morsePrint[4] = 1; break;
+      case 31: case 33: case 37: morsePrint[4] = 2; break;
+   }
+
+   if (DEBUG) check(aP);
 
    for (int lC = 0; lC < 5; lC++) { // loopCount variable
-      if (database[lC][aP] == 1) dot();
-      else if (database[lC][aP] == 2) dash();
-      else break;
+      if (aP == 100) {
+         printf("%c\n\t is an invalid input!!! \n", input);
+         break;
+      }
+      if (morsePrint[lC] == 1) dot();
+      else if (morsePrint[lC] == 2) dash();
    }
 
    printf("\n");
 
    if (DEBUG) {
       for (int lC = 0; lC < 5; lC++) {
-         for (int lR = 0; lR < 40; lR++) {
-            printf("database[%d][%d] = %d    ", lC, lR, database[lC][lR]);
-         }
-         printf("\n");
+         printf(" morsePrint[%d] = %d \n", lC, morsePrint[lC]);
       }
    }
 
@@ -92,6 +125,19 @@ int locate(char input)
       case 'x': value = 23; break;
       case 'y': value = 25; break;
       case 'z': value = 26; break;
+      case '0': value = 61; break;
+      case '1': value = 45; break;
+      case '2': value = 37; break;
+      case '3': value = 33; break;
+      case '4': value = 31; break;
+      case '5': value = 30; break;
+      case '6': value = 46; break;
+      case '7': value = 54; break;
+      case '8': value = 58; break;
+      case '9': value = 60; break;
+      case '+': value = 40; break;
+      case '=': value = 47; break;
+      case '/': value = 48; break;
    }
    return value;
 }
