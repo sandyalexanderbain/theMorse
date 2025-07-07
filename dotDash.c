@@ -2,8 +2,8 @@
 
 #include <ctype.h>
 #include <stdio.h>
-// #include <stdlib.h>
-// #include <time.h>
+#include <stdlib.h>
+#include <time.h>
 #include <stdbool.h>
 
 #define DEBUG false
@@ -18,66 +18,61 @@
 
 void dot(void);
 void dash(void);
+char convert(char letter);
 int locate(char userInput);
 void translate(char morsePrint[], int temporary);
 
 int main(void)
 {
    char toggleSplit, toggleSpace, 
-        userInput, 
+        userInput, letterPrint,
         morsePrint[5] = {false};
    int temporary = 100; // Use integer 100 as a base point and invalid input will break the loop.
 
-   printf("\nHelloThere. Split Words On Spaces? --> \nSplit\nWords\nOn\nSpaces?");
-   printf("       Type \"S\" to toggle ON. Typing any other character keeps toggle OFF. \n\n    : ");
-   scanf(" %c", &toggleSplit);
-   toggleSplit = toupper(toggleSplit);
-   printf("\n\t\tToggle Split is "); 
+   char letter;
+   int noW, noL;
 
-   if (toggleSplit == 'S') {
-      printf("ON."); 
-      printf("\n\nType \"D\" to toggle ON double-line spacing. Typing other characters keeps OFF.");
-      printf("\n\n   : ");
-      scanf(" %c", &toggleSpace); 
-      toggleSpace = toupper(toggleSpace);
-      printf("\n\n\t\tToggle Space is "); 
-      if (toggleSpace == 'D') printf("ON. \n\n"); else printf("OFF.\n\n");
-   }
-   else printf("OFF.\n\n\n");
+   srand((unsigned) time(NULL)); // Initalises a random number generation.
 
-   printf("Please type multiple letters/numbers or words to translate into morse code. \n");
-   printf("Type \"?\" and press ENTER/RETURN to exit the program.\n\n   : ");
+   noW = rand() % 9 + 1; printf("noW = %d \n", noW); // + 1 changes the range from 0-8 to 1-9
+   noL = rand() % 9 + 1; printf("noL = %d \n", noL);
 
-   while (userInput != '?') {
-      userInput = tolower(getchar());
-      // Add small gaps between morse code characters.
-      printf("     ");
+   for (int i = 0; i < noW; i++) {
+      printf("\n");
+      for (int j = 0; j < noL; j++) {
+         // printf("J = %d \n", j);
+         letter = rand() % 39 + 1;
 
-      // Detect spaces between letters/numbers/words and break into a new-line
-      if (toggleSplit == 'S') if (userInput == ' ') printf("\n");
-      if (toggleSpace == 'D') if (userInput == ' ') printf("\n");
+         userInput = convert(letter);
+         printf("     ");
 
-      check(temporary);
-      temporary = locate(userInput);
-      check(temporary);
+         temporary = locate(userInput);
 
-      // Prevent Changing the first character to • when not valid userInput.
-      if (userInput != 'e' && temporary == 0) {
-         temporary = 100;
+         // Toggle letter view and number listing.
+         // printf(" %d. %c\n", j, userInput);
+
+         // Prevent Changing the first character to • when not valid userInput.
+         if (userInput != 'e' && temporary == 0) {
+            temporary = 100;
+         }
+
+         translate(morsePrint, temporary);
+         check(temporary);
+
+         for (int lC = 0; lC < 5; lC++) { // loopCount variable
+            if (temporary == 100) break;
+            if (morsePrint[lC] == 1) dot();
+            else if (morsePrint[lC] == 2) dash();
+         }
+         // Clean the array "morsePrint" after each char printed.
+         five(morsePrint, 0, 0, 0, 0, 0);
+         printf("\n");
       }
-
-      translate(morsePrint, temporary);
-      check(temporary);
-
-      for (int lC = 0; lC < 5; lC++) { // loopCount variable
-         if (temporary == 100) break;
-         if (morsePrint[lC] == 1) dot();
-         else if (morsePrint[lC] == 2) dash();
-      }
-      // Clean the array "morsePrint" after each char printed.
-      five(morsePrint, 0, 0, 0, 0, 0);
+      // printf("i = %d \n", i);
    }
-   printf("\n");
+
+// Add small gaps between morse code characters.
+printf("\n");
 
    if (DEBUG) {
       for (int lC = 0; lC < 5; lC++) {
@@ -94,6 +89,55 @@ void dot() {
 
 void dash() {
    printf("--- ");
+}
+
+char convert(char letter)
+{
+   char value = 0;
+
+   switch (letter) {
+      case 1: value = 'a'; break;
+      case 2: value = 'b'; break;
+      case 3: value = 'c'; break;
+      case 4: value = 'd'; break;
+      case 5: value = 'e'; break;
+      case 6: value = 'f'; break;
+      case 7: value = 'g'; break;
+      case 8: value = 'h'; break;
+      case 9: value = 'i'; break;
+      case 10: value = 'j'; break;
+      case 11: value = 'k'; break;
+      case 12: value = 'l'; break;
+      case 13: value = 'm'; break;
+      case 14: value = 'n'; break;
+      case 15: value = 'o'; break;
+      case 16: value = 'p'; break;
+      case 17: value = 'q'; break;
+      case 18: value = 'r'; break;
+      case 19: value = 's'; break;
+      case 20: value = 't'; break;
+      case 21: value = 'u'; break;
+      case 22: value = 'v'; break;
+      case 23: value = 'w'; break;
+      case 24: value = 'x'; break;
+      case 25: value = 'y'; break;
+      case 26: value = 'z'; break;
+      case 27: value = '0'; break;
+      case 28: value = '1'; break;
+      case 29: value = '2'; break;
+      case 30: value = '3'; break;
+      case 31: value = '4'; break;
+      case 32: value = '5'; break;
+      case 33: value = '6'; break;
+      case 34: value = '7'; break;
+      case 35: value = '8'; break;
+      case 36: value = '9'; break;
+      case 37: value = '+'; break;
+      case 38: value = '='; break;
+      case 39: value = '/'; break;
+   }
+   // printf("CONVERT, value = %c \n", value);
+   return value;
 }
 
 int locate(char userInput)
@@ -141,6 +185,7 @@ int locate(char userInput)
       case '=': value = 47; break;
       case '/': value = 48; break;
    }
+   // printf("LOCATE, value = %d \n", value);
    return value;
 }
 
@@ -170,9 +215,9 @@ void translate(char morsePrint[], int temporary)
       case 22: four(morsePrint, 2, 1, 1, 1); break;
       case 23: four(morsePrint, 2, 1, 1, 2); break;
       case 24: four(morsePrint, 2, 1, 2, 1); break;
-      case 25: four(morsePrint, 2, 1, 2, 2); break;
+      case 27: four(morsePrint, 2, 1, 2, 2); break;
       case 26: four(morsePrint, 2, 2, 1, 1); break;
-      case 27: four(morsePrint, 2, 2, 1, 2); break;
+      case 25: four(morsePrint, 2, 2, 1, 2); break;
 
       case 6: three(morsePrint, 1, 1, 1); break;
       case 7: three(morsePrint, 1, 1, 2); break;
