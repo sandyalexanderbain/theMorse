@@ -1,4 +1,4 @@
-s// To simulate dot and dash in C.
+// To simulate dot and dash in C.
 
 #include <ctype.h>
 #include <stdio.h>
