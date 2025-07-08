@@ -18,49 +18,49 @@
 
 void dot(void);
 void dash(void);
-char convert(char letter);
-int locate(char userInput);
-void translate(char morsePrint[], int temporary);
+int locate(char letter);
+void translate(char letter, char morsePrint[]);
 
 int main(void)
 {
-   char toggleSplit, toggleSpace, 
-        userInput, letterPrint,
-        morsePrint[5] = {false};
+   char morsePrint[5] = {false};
    int temporary = 100; // Use integer 100 as a base point and invalid input will break the loop.
 
-   char letter;
+   char letter,
+        one[5] = {'a', 'i'},
+        two[5][2] = {{'h', 'i'}, {'t', 'o'}, {'a', 'm'}, {'o', 'r'}, {'d', 'o'}},
+        three[5][3] = {{'t', 'h', 'e'}, {'p', 'e', 'n'}, {'a', 'n', 't'}, 
+                       {'r', 'a', 't'}, {'c', 'a', 't'}};
+
+   // noW stands for NumberOfWords. noL is NumberOfLetters --> (n)umber(o)f(L)etters
    int noW, noL;
 
    srand((unsigned) time(NULL)); // Initalises a random number generation.
 
-   noW = rand() % 9 + 1; printf("noW = %d \n", noW); // + 1 changes the range from 0-8 to 1-9
-   noL = rand() % 9 + 1; printf("noL = %d \n", noL);
+   noW = rand() % 5 + 1; printf("noW = %d \n", noW); // + 1 changes the range from 0-2 to 1-3
+   noL = rand() % 3 + 1; printf("noL = %d \n", noL);
 
    for (int i = 0; i < noW; i++) {
       printf("\n");
       for (int j = 0; j < noL; j++) {
          // printf("J = %d \n", j);
-         letter = rand() % 39 + 1;
+         //  FIX: one[j] does not cycle.
+         if (noL == 1) letter = one[j];
+         else if (noL == 2) letter = two[i][j];
+         else if (noL == 3) letter = three[i][j];
 
-         userInput = convert(letter);
+         printf("letter = %c  ", letter);
          printf("     ");
 
-         temporary = locate(userInput);
+         letter = locate(letter);
 
          // Toggle letter view and number listing.
          // printf(" %d. %c\n", j, userInput);
 
-         // Prevent Changing the first character to • when not valid userInput.
-         if (userInput != 'e' && temporary == 0) {
-            temporary = 100;
-         }
-
-         translate(morsePrint, temporary);
-         check(temporary);
+         translate(letter, morsePrint);
 
          for (int lC = 0; lC < 5; lC++) { // loopCount variable
-            if (temporary == 100) break;
+            if (letter == 100) break;
             if (morsePrint[lC] == 1) dot();
             else if (morsePrint[lC] == 2) dash();
          }
@@ -91,60 +91,11 @@ void dash() {
    printf("--- ");
 }
 
-char convert(char letter)
-{
-   char value = 0;
-
-   switch (letter) {
-      case 1: value = 'a'; break;
-      case 2: value = 'b'; break;
-      case 3: value = 'c'; break;
-      case 4: value = 'd'; break;
-      case 5: value = 'e'; break;
-      case 6: value = 'f'; break;
-      case 7: value = 'g'; break;
-      case 8: value = 'h'; break;
-      case 9: value = 'i'; break;
-      case 10: value = 'j'; break;
-      case 11: value = 'k'; break;
-      case 12: value = 'l'; break;
-      case 13: value = 'm'; break;
-      case 14: value = 'n'; break;
-      case 15: value = 'o'; break;
-      case 16: value = 'p'; break;
-      case 17: value = 'q'; break;
-      case 18: value = 'r'; break;
-      case 19: value = 's'; break;
-      case 20: value = 't'; break;
-      case 21: value = 'u'; break;
-      case 22: value = 'v'; break;
-      case 23: value = 'w'; break;
-      case 24: value = 'x'; break;
-      case 25: value = 'y'; break;
-      case 26: value = 'z'; break;
-      case 27: value = '0'; break;
-      case 28: value = '1'; break;
-      case 29: value = '2'; break;
-      case 30: value = '3'; break;
-      case 31: value = '4'; break;
-      case 32: value = '5'; break;
-      case 33: value = '6'; break;
-      case 34: value = '7'; break;
-      case 35: value = '8'; break;
-      case 36: value = '9'; break;
-      case 37: value = '+'; break;
-      case 38: value = '='; break;
-      case 39: value = '/'; break;
-   }
-   // printf("CONVERT, value = %c \n", value);
-   return value;
-}
-
-int locate(char userInput)
+int locate(char letter)
 {
    int value = 0;
 
-   switch (userInput) {
+   switch (letter) {
       case 'a': value = 3; break;
       case 'b': value = 22; break;
       case 'c': value = 24; break;
@@ -189,9 +140,9 @@ int locate(char userInput)
    return value;
 }
 
-void translate(char morsePrint[], int temporary)
+void translate(char letter, char morsePrint[])
 {
-   switch (temporary) {
+   switch (letter) {
       case 30: five(morsePrint, 1, 1, 1, 1, 1); break;
       case 31: five(morsePrint, 1, 1, 1, 1, 2); break;
       case 33: five(morsePrint, 1, 1, 1, 2, 2); break;
