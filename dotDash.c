@@ -3,8 +3,9 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <stdbool.h>
+#include <time.h>
+
 
 #define DEBUG false
 // Indented MACRO for checking value of a certain variable.
@@ -18,19 +19,19 @@
 
 void dot(void);
 void dash(void);
+void delay(float noS);
 char convert(char letter);
 int locate(char userInput);
 void translate(char morsePrint[], int temporary);
 
 int main(void)
 {
-   char toggleSplit, toggleSpace, 
-        userInput, letterPrint,
+   char userInput, letter,
         morsePrint[5] = {false};
    int temporary = 100; // Use integer 100 as a base point and invalid input will break the loop.
 
-   char letter;
-   int noW, noL;
+   int noW, noL; // e.g. (n)umber(o)f(W)ords / (L)etters / (S)econds
+   float noS;
 
    srand((unsigned) time(NULL)); // Initalises a random number generation.
 
@@ -38,6 +39,7 @@ int main(void)
    noL = rand() % 9 + 1; printf("noL = %d \n", noL);
 
    for (int i = 0; i < noW; i++) {
+      delay(0.7);
       printf("\n");
       for (int j = 0; j < noL; j++) {
          // printf("J = %d \n", j);
@@ -66,6 +68,7 @@ int main(void)
          }
          // Clean the array "morsePrint" after each char printed.
          five(morsePrint, 0, 0, 0, 0, 0);
+         delay(0.3);
          printf("\n");
       }
       // printf("i = %d \n", i);
@@ -85,10 +88,23 @@ printf("\n");
 
 void dot() {
    printf("• ");
+   system("afplay /Users/baina1/In-use/morseCodeProject/dotSound.wav");
 }
 
 void dash() {
    printf("--- ");
+   system("afplay /Users/baina1/In-use/morseCodeProject/dashSound.wav");
+}
+
+void delay(float noS)
+{
+   // ms is milliseconds.
+   int ms = noS * 1000;
+
+   clock_t start_time = clock();
+
+   while(clock() <start_time + ms)
+      ;
 }
 
 char convert(char letter)
